@@ -1,31 +1,43 @@
-import { FormEvent, useState } from 'react'
+import React, { useState } from 'react'
+import { StyledForm, StyledInput, StyledButton } from './StyledFormVagas'
 
-import styles from './FormVagas.module.css'
+const FormVagas = ({ adicionarVaga }) => {
+  const [titulo, setTitulo] = useState('')
+  const [link, setLink] = useState('')
 
-type Props = {
-  aoPesquisar: (termo: string) => void
-}
-
-const FormVagas = ({ aoPesquisar }: Props) => {
-  const [termo, setTermo] = useState<string>('')
-
-  const aoEnviarForm = (e: FormEvent<HTMLFormElement>) => {
+  const aoEnviarForm = (e) => {
     e.preventDefault()
-    aoPesquisar(termo.toLocaleLowerCase())
+
+    // Criar um novo objeto de vaga
+    const novaVaga = {
+      id: Date.now(), // Usando o timestamp como ID
+      titulo,
+      link
+    }
+
+    // Chamar a função para adicionar a vaga
+    adicionarVaga(novaVaga)
+
+    // Limpar os campos do formulário
+    setTitulo('')
+    setLink('')
   }
 
   return (
-    <form className={styles.form} onSubmit={aoEnviarForm}>
-      <input
-        className={styles.campo}
-        placeholder="Front-end, fullstack, node, design"
-        onChange={(e) => setTermo(e.target.value)}
-        type="search"
+    <StyledForm onSubmit={aoEnviarForm}>
+      <StyledInput
+        placeholder="Título da Vaga"
+        value={titulo}
+        onChange={(e) => setTitulo(e.target.value)}
       />
-      <button className={styles.btnPesquisar} type="submit">
-        Pesquisar
-      </button>
-    </form>
+      <StyledInput
+        placeholder="Link da Vaga"
+        value={link}
+        onChange={(e) => setLink(e.target.value)}
+      />
+      <StyledButton type="submit">Adicionar Vaga</StyledButton>
+    </StyledForm>
   )
 }
+
 export default FormVagas
